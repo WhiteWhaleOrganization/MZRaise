@@ -154,7 +154,7 @@ class MZRefreshNormalHeaderContent: UIView {
             timeLabel = UILabel(frame: CGRect(x: 30, y: 29, width: CGFloat.greatestFiniteMagnitude, height: 18))
             timeLabel!.textColor = MZRefreshConfig.shareInstance.timeColor
             timeLabel!.font = MZRefreshConfig.shareInstance.timeFont
-            self.addSubview(timeLabel!)
+//            self.addSubview(timeLabel!)
             
             self.setValue(MZRefreshDate.getLastRefreshTime(), forKey: "timeString")
         }
@@ -163,6 +163,16 @@ class MZRefreshNormalHeaderContent: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateTimeColor), name: Notification.Name.MZRefreshTimeColorChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateStatusFont), name: Notification.Name.MZRefreshStatusFontChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTimeFont), name: Notification.Name.MZRefreshTimeFontChanged, object: nil)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let refreshWidth = refreshWidth,let refreshOffset = refreshOffset {
+            let maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: 18)
+            let size = descLabel!.sizeThatFits(maxSize)
+            descLabel!.frame = CGRect(x: 30, y: 14, width: size.width, height: 22)
+            self.frame = CGRect(x: (refreshWidth - size.width - 30) * 0.5, y: -refreshOffset, width: size.width + 30, height: refreshOffset)
+        }
     }
     
     @objc func updateStatusColor(notification: Notification) {
