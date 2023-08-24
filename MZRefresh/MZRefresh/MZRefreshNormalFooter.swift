@@ -9,7 +9,6 @@ import UIKit
 import NVActivityIndicatorView
 
 open class MZRefreshNormalFooter: MZRefreshFooterComponent {
-    
     /// 上拉加载组件
     /// - Parameters:
     ///   - type: 组件动画类型
@@ -81,11 +80,13 @@ class MZRefreshNormalFooterContent: UIView {
     var indicatorView: NVActivityIndicatorView?
     var status: MZRefreshStatus?
     var descLabel: UILabel?
-    
+    var refreshWidth: CGFloat?
+    var refreshOffset: CGFloat?
     convenience init(refreshWidth: CGFloat, refreshOffset: CGFloat, status: MZRefreshStatus, color: UIColor, type: NVActivityIndicatorType) {
         self.init(frame: CGRect(x: 0, y: -refreshOffset, width: refreshWidth, height: refreshOffset))
         self.status = status
-        
+        self.refreshWidth = refreshWidth
+        self.refreshOffset = refreshOffset
         let animatedView = UIView(frame: CGRect(x: 0, y: 10, width: 30, height: 30))
         self.addSubview(animatedView)
         // 刷新图标
@@ -123,6 +124,16 @@ class MZRefreshNormalFooterContent: UIView {
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateStatusColor), name: Notification.Name.MZRefreshStatusColorChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateStatusFont), name: Notification.Name.MZRefreshStatusFontChanged, object: nil)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let refreshWidth = refreshWidth,let refreshOffset = refreshOffset {
+            let maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: 18)
+            let size = descLabel!.sizeThatFits(maxSize)
+            descLabel!.frame = CGRect(x: 30, y: 14, width: size.width, height: 22)
+            self.frame = CGRect(x: (refreshWidth - size.width - 30) * 0.5, y: -refreshOffset, width: size.width + 30, height: refreshOffset)
+        }
     }
     
     @objc func updateStatusColor(notification: Notification) {
