@@ -121,19 +121,8 @@ class MZRefreshNormalFooterContent: UIView {
         let size = descLabel!.sizeThatFits(maxSize)
         descLabel!.frame = CGRect(x: 30, y: 14, width: size.width, height: 22)
         self.frame = CGRect(x: (refreshWidth - size.width - 30) * 0.5, y: -refreshOffset, width: size.width + 30, height: refreshOffset)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(updateStatusColor), name: Notification.Name.MZRefreshStatusColorChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateStatusFont), name: Notification.Name.MZRefreshStatusFontChanged, object: nil)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if let refreshWidth = refreshWidth,let refreshOffset = refreshOffset {
-            let maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: 18)
-            let size = descLabel!.sizeThatFits(maxSize)
-            descLabel!.frame = CGRect(x: 30, y: 14, width: size.width, height: 22)
-            self.frame = CGRect(x: (refreshWidth - size.width - 30) * 0.5, y: -refreshOffset, width: size.width + 30, height: refreshOffset)
-        }
     }
     
     @objc func updateStatusColor(notification: Notification) {
